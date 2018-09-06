@@ -1,0 +1,1 @@
+<annotation><object><name>torpedo_target</name><bndbox><xmin>321</xmin><ymin>14</ymin><xmax>472</xmax><ymax>264</ymax></bndbox><difficult>0</difficult><truncated>0</truncated><pose>Unspecified</pose></object><filename>573.jpg</filename><size><height>480</height><width>640</width></size></annotation>

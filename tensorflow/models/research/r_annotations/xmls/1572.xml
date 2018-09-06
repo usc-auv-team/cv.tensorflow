@@ -1,0 +1,1 @@
+<annotation><object><name>buoy_green</name><bndbox><xmin>432</xmin><ymin>80</ymin><xmax>472</xmax><ymax>127</ymax></bndbox><difficult>0</difficult><truncated>0</truncated><pose>Unspecified</pose></object><filename>1572.jpg</filename><size><height>360</height><width>640</width></size></annotation>

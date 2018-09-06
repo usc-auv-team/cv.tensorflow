@@ -1,0 +1,26 @@
+<annotation>
+  <folder>yellow_buoy</folder>
+  <filename>yellow_buoy_396</filename>
+  <path>C:/Users/fpang/Desktop/yellow_buoy/yellow_buoy_396.jpg</path>
+  <source>
+    <database>Unknown</database>
+  </source>
+  <size>
+    <width>1920</width>
+    <height>1080</height>
+    <depth>3</depth>
+  </size>
+  <segmented>0</segmented>
+  <object>
+    <name>yellow_buoy</name>
+    <pose>Unspecified</pose>
+    <truncated>0</truncated>
+    <difficult>0</difficult>
+    <bndbox>
+      <xmin>1155</xmin>
+      <ymin>2</ymin>
+      <xmax>1279</xmax>
+      <ymax>141</ymax>
+    </bndbox>
+  </object>
+</annotation>

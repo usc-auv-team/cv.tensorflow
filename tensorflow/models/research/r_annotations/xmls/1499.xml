@@ -1,0 +1,1 @@
+<annotation><object><name>channel</name><bndbox><xmin>170</xmin><ymin>159</ymin><xmax>323</xmax><ymax>256</ymax></bndbox><difficult>0</difficult><truncated>0</truncated><pose>Unspecified</pose></object><filename>1499.jpg</filename><size><height>360</height><width>640</width></size></annotation>
