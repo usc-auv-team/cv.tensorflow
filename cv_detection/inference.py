@@ -5,6 +5,7 @@ import os
 import sys
 import tensorflow as tf
 import timeit
+import datetime
 
 import cv2
 
@@ -13,8 +14,8 @@ from io import StringIO
 from PIL import Image
 
 # This is needed since the notebook is stored in the object_detection folder.
-sys.path.append("/home/pedro/usc-computer-vision-2018/tensorflow/models/research")
-sys.path.append("/home/pedro/usc-computer-vision-2018/tensorflow/models/research/object_detection")
+sys.path.append("/home/pedro/repos/usc-computer-vision-2018/tensorflow/models/research")
+sys.path.append("/home/pedro/repos/usc-computer-vision-2018/tensorflow/models/research/object_detection")
 
 # ## Object detection imports
 # Here are the imports from the object detection module.
@@ -30,14 +31,14 @@ from utils import visualization_utils as vis_util
 
 # What model to download.
 # MODEL_NAME = 'ssd_mobilenet_v1_coco_2017_11_17'
-MODEL_NAME = '/home/pedro/usc-computer-vision-2018/tensorflow/models/research/exported_graphs/SSD_Mobilenet/new_data/4_16/step_200005'
+MODEL_NAME = '/home/pedro/repos/AUV/cv.tensorflow/cv_detection/models/SSD_Mobilenet_4_28'
 # MODEL_NAME = '/home/pedro/pretrained_models/faster_rcnn_resnet101_coco_2018_01_28'
 
 # Path to frozen detection graph. This is the actual model that is used for the object detection.
 PATH_TO_CKPT = MODEL_NAME + '/frozen_inference_graph.pb'
 
 # List of the strings that is used to add correct label for each box.
-PATH_TO_LABELS = '/home/pedro/usc-computer-vision-2018/tensorflow/models/research/robosub_label_map.pbtxt'
+PATH_TO_LABELS = '/home/pedro/repos/usc-computer-vision-2018/tensorflow/models/research/robosub_label_map.pbtxt'
 
 NUM_CLASSES = 13
 
@@ -92,12 +93,9 @@ def main():
 
             # vc = cv2.VideoCapture('/home/pedro/Videos/auv/GOPR0883_small.MP4')
             vc = cv2.VideoCapture(0)
-            # fourcc = cv2.VideoWriter_fourcc(*'MP4V')
-            # out = cv2.VideoWriter('/home/jaimin/Workspace/Wet Tests/output.MP4', fourcc, vc.get(cv2.CAP_PROP_FPS),
-            #                       (int(vc.get(cv2.CAP_PROP_FRAME_WIDTH)), int(vc.get(cv2.CAP_PROP_FRAME_HEIGHT))))
 
             vc.set(cv2.CAP_PROP_MODE, cv2.CAP_MODE_RGB)
-            vc.set(cv2.CAP_PROP_FPS, 30)
+            vc.set(cv2.CAP_PROP_FPS, 60)
             vc.set(cv2.CAP_PROP_CONVERT_RGB, 1)
             vc.set(cv2.CAP_PROP_ISO_SPEED, 400)
 
@@ -107,6 +105,35 @@ def main():
             print('FPS:', vc.get(cv2.CAP_PROP_FPS))
             print('Convert RGB:', vc.get(cv2.CAP_PROP_CONVERT_RGB))
             print('ISO Speed:', vc.get(cv2.CAP_PROP_ISO_SPEED))
+
+            # forucc in MP4V encoding, to be used with MP4 output format ----- doesn't work -----
+            fourcc = cv2.VideoWriter_fourcc(*'MP4V')
+
+            # fourcc in XVID encoding, to be used with AVI output format
+            # fourcc = cv2.VideoWriter_fourcc(*'XVID')
+
+            # outputting video in AVI format, to be used with XVID fourcc
+            # video_path = '/home/pedro/Videos/AUV/output_{0}.AVI'.format(datetime.datetime.now().strftime("%Y-%m-%d"))
+            # out = cv2.VideoWriter(video_path, fourcc, vc.get(cv2.CAP_PROP_FPS),
+            #                       (int(vc.get(cv2.CAP_PROP_FRAME_WIDTH)), int(vc.get(cv2.CAP_PROP_FRAME_HEIGHT))))
+
+            # outputting video in MP4 format ----- doesn't work -------
+            video_path = '/home/pedro/Videos/AUV/output_{0}.MP4'.format(datetime.datetime.now().strftime("%Y-%m-%d_%H:%M:%S"))
+            out = cv2.VideoWriter(video_path, fourcc, vc.get(cv2.CAP_PROP_FPS),
+                                  (int(vc.get(cv2.CAP_PROP_FRAME_WIDTH)), int(vc.get(cv2.CAP_PROP_FRAME_HEIGHT))))
+
+            # second MP4 without date formatting for name
+            # video_path = '/home/pedro/Videos/AUV/output.MP4'
+            # out = cv2.VideoWriter(video_path, fourcc, vc.get(cv2.CAP_PROP_FPS),
+            #                       (int(vc.get(cv2.CAP_PROP_FRAME_WIDTH)), int(vc.get(cv2.CAP_PROP_FRAME_HEIGHT))))
+
+
+            # trying to fix output to be able to output in MP4
+            # out = cv2.VideoWriter(video_path, 0x00000021, vc.get(cv2.CAP_PROP_FPS),
+            #           (int(vc.get(cv2.CAP_PROP_FRAME_WIDTH)), int(vc.get(cv2.CAP_PROP_FRAME_HEIGHT))))
+
+
+
 
             # Put the code in try-except statements
             # Catch the keyboard exception and
@@ -158,6 +185,7 @@ def main():
                     # out.write(cv2.cvtColor(image_np, cv2.COLOR_RGB2BGR))
 
                     cv2.imshow('Camera Input', image_np)
+                    out.write(image_np)
                     if cv2.waitKey(1) & 0xFF == ord('q'):
                         break
 
