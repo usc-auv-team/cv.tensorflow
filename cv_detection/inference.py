@@ -121,7 +121,9 @@ def main():
             video_path = '/home/pedro/Videos/AUV/output_{0}.MP4'.format(datetime.datetime.now().strftime("%Y-%m-%d_%H:%M:%S"))
             out = cv2.VideoWriter(video_path, fourcc, vc.get(cv2.CAP_PROP_FPS),
                                   (int(vc.get(cv2.CAP_PROP_FRAME_WIDTH)), int(vc.get(cv2.CAP_PROP_FRAME_HEIGHT))))
-
+            log_path = '/home/pedro/repos/AUV/cv.tensorflow/cv_detection/test_logs/{0}.txt'.format(datetime.datetime.now().strftime("%Y-%m-%d_%H:%M:%S"))
+            print(os.path.exists(log_path))
+            log = open(log_path, "a")
             # second MP4 without date formatting for name
             # video_path = '/home/pedro/Videos/AUV/output.MP4'
             # out = cv2.VideoWriter(video_path, fourcc, vc.get(cv2.CAP_PROP_FPS),
@@ -182,6 +184,28 @@ def main():
                         use_normalized_coordinates=True,
                         line_thickness=4)
 
+                    # prints bounding boxes, class, and scores only if score > 0.1
+                    objects = []
+                    height = vc.get(cv2.CAP_PROP_FRAME_HEIGHT)
+                    width = vc.get(cv2.CAP_PROP_FRAME_WIDTH)
+                    for index, value in enumerate(classes[0]):
+                      object_dict = {}
+                      if scores[0, index] > 0.3:
+                        object_dict[(category_index.get(value)).get('name').encode('utf8')] = \
+                                            scores[0, index]
+                        objects.append(object_dict)
+                        ymin = int((boxes[0][0][0]*height))
+                        xmin = int((boxes[0][0][1]*width))
+                        ymax = int((boxes[0][0][2]*height))
+                        xmax = int((boxes[0][0][3]*width))
+                        print("Top Left:")#, file = log)
+                        print("xmin: " + str(xmin))
+                        print("ymax: " + str(ymax))#, file = log)
+                        print("Bottom Right")#, file = log)
+                        print("xmax: " + str(xmax))
+                        print("ymax: " + str(ymax))#, file = log)
+                        print(objects)#, file = log)
+                        # print(get_distance(ymax-ymin,xmax-xmin))
                     # out.write(cv2.cvtColor(image_np, cv2.COLOR_RGB2BGR))
 
                     cv2.imshow('Camera Input', image_np)
@@ -202,6 +226,14 @@ def main():
     cv2.destroyAllWindows()
     # print("Released Output Video")
 
+# in progress, this is wrong
+def get_distance(f_height,f_width):
+    known_height_mm = 189.44
+    known_width_mm = 279.89
+    known_height_in = 7.45826772
+    known_width_in = 11.0192913
+
+    return (known_width_in * f_height)/f_width
 
 if __name__ == '__main__':
     main()
