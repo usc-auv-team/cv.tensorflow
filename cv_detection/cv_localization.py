@@ -1,3 +1,5 @@
+# This program implements the same
+
 from __future__ import print_function
 
 import numpy as np
@@ -79,6 +81,26 @@ def main():
 
     start_time = timeit.default_timer()
     total_detection_time = 0
+
+    # setting up known distances
+    # KNOWN_DISTANCE = 24.0
+
+    # info about buoy
+    # known_height_mm = 189.44
+    # known_width_mm = 279.89
+    known_height_m = 0.18944
+    known_width_m = 0.27989
+    # known_height_in = 7.45826772
+    # known_width_in = 11.0192913
+
+    KNOWN_HEIGHT = known_height_m
+    KNOWN_WIDTH = known_width_m
+
+    # only need to get calibration value if not calibrating
+    if(len(sys.argv) == 1):# sys.argv[1] != 'c'):
+        buoyFocalLength = get_calibration_values()
+
+
     with detection_graph.as_default():
         with tf.Session(graph=detection_graph) as sess:
             # Definite input and output Tensors for detection_graph
@@ -205,7 +227,19 @@ def main():
                         print("xmax: " + str(xmax))
                         print("ymax: " + str(ymax))#, file = log)
                         print(objects)#, file = log)
-                        # print(get_distance(ymax-ymin,xmax-xmin))
+                        # here we can get distance, hwoever we might also want
+                        # calibrate
+                        perWidth = xmax-xmin
+                        if(len(sys.argv) == 1):
+                            # call distance_to_camera function
+                            # these values come from around line 84, because I
+                            # wanted them to be set before the loops
+                            print("Distance " + str(distance_to_camera(KNOWN_WIDTH, buoyFocalLength, perWidth)))
+                        else:
+                            # call calibration function
+                            print("calibrating")
+                            calibrate(perWidth)
+
                     # out.write(cv2.cvtColor(image_np, cv2.COLOR_RGB2BGR))
 
                     cv2.imshow('Camera Input', image_np)
@@ -226,17 +260,36 @@ def main():
     cv2.destroyAllWindows()
     # print("Released Output Video")
 
+def get_calibration_values():
+    # will be updated later to fit more calibration values
+    f = open("calibration.txt", "r")
+    return float(f.read())
+
 def distance_to_camera(knownWidth, focalLength, perWidth):
     # compute the distance from the marker to the camera
     return (knownWidth * focalLength) / perWidth
-# in progress, this is wrong
-def get_distance(f_height,f_width):
-    known_height_mm = 189.44
-    known_width_mm = 279.89
-    known_height_in = 7.45826772
-    known_width_in = 11.0192913
 
-    return (known_width_in * f_height)/f_width
+def calibrate(pixelWidth):
+
+    # info about buoy
+    # known_height_mm = 189.44
+    # known_width_mm = 279.89
+    known_height_m = 0.18944
+    known_width_m = 0.27989
+    # known_height_in = 7.45826772
+    # known_width_in = 11.0192913
+
+    # for now, we're using meters and buoys
+    KNOWN_DISTANCE = 0.5
+    KNOWN_HEIGHT = known_height_m
+    KNOWN_WIDTH = known_width_m
+
+    focalLength = (pixelWidth * KNOWN_DISTANCE) / KNOWN_WIDTH
+    f = open("calibration.txt", "w+")
+    # f.write("buoy ")
+    f.write(str(focalLength))
+
+
 
 if __name__ == '__main__':
     main()
