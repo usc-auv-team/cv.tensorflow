@@ -14,8 +14,9 @@ from io import StringIO
 from PIL import Image
 
 # This is needed since the notebook is stored in the object_detection folder.
-sys.path.append("/home/pedro/repos/usc-computer-vision-2018/tensorflow/models/research")
-sys.path.append("/home/pedro/repos/usc-computer-vision-2018/tensorflow/models/research/object_detection")
+sys.path.append("models")
+sys.path.append("models/object_detection")
+#sys.path.append("..")
 
 # ## Object detection imports
 # Here are the imports from the object detection module.
@@ -31,14 +32,14 @@ from utils import visualization_utils as vis_util
 
 # What model to download.
 # MODEL_NAME = 'ssd_mobilenet_v1_coco_2017_11_17'
-MODEL_NAME = '/home/pedro/repos/AUV/cv.tensorflow/cv_detection/models/SSD_Mobilenet_4_28'
+MODEL_NAME = './models/SSD_Mobilenet_4_28'
 # MODEL_NAME = '/home/pedro/pretrained_models/faster_rcnn_resnet101_coco_2018_01_28'
 
 # Path to frozen detection graph. This is the actual model that is used for the object detection.
 PATH_TO_CKPT = MODEL_NAME + '/frozen_inference_graph.pb'
 
 # List of the strings that is used to add correct label for each box.
-PATH_TO_LABELS = '/home/pedro/repos/usc-computer-vision-2018/tensorflow/models/research/robosub_label_map.pbtxt'
+PATH_TO_LABELS = './models/robosub_label_map.pbtxt'
 
 NUM_CLASSES = 13
 
@@ -118,12 +119,13 @@ def main():
             #                       (int(vc.get(cv2.CAP_PROP_FRAME_WIDTH)), int(vc.get(cv2.CAP_PROP_FRAME_HEIGHT))))
 
             # outputting video in MP4 format ----- doesn't work -------
-            video_path = '/home/pedro/Videos/AUV/output_{0}.MP4'.format(datetime.datetime.now().strftime("%Y-%m-%d_%H:%M:%S"))
+            video_path = './Videos/output_{0}.MP4'.format(datetime.datetime.now().strftime("%Y-%m-%d_%H:%M:%S"))
             out = cv2.VideoWriter(video_path, fourcc, vc.get(cv2.CAP_PROP_FPS),
                                   (int(vc.get(cv2.CAP_PROP_FRAME_WIDTH)), int(vc.get(cv2.CAP_PROP_FRAME_HEIGHT))))
-            log_path = '/home/pedro/repos/AUV/cv.tensorflow/cv_detection/test_logs/{0}.txt'.format(datetime.datetime.now().strftime("%Y-%m-%d_%H:%M:%S"))
-            print(os.path.exists(log_path))
-            log = open(log_path, "a")
+            log_path = './Logs/{0}.txt'.format(datetime.datetime.now().strftime("%Y-%m-%d_%H:%M:%S"))
+
+            print(os.path.exists('./Logs'))
+            log = open(log_path, 'a+')
             # second MP4 without date formatting for name
             # video_path = '/home/pedro/Videos/AUV/output.MP4'
             # out = cv2.VideoWriter(video_path, fourcc, vc.get(cv2.CAP_PROP_FPS),
